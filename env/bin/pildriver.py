@@ -1,4 +1,4 @@
-#!/home/madalin/Workspace/Python/DjangoProjects/1_v/env/bin/python3
+#!/home/madalin/Workspace/Python/DjangoProjects/dizertatie/env/bin/python3
 """PILdriver, an image-processing calculator using PIL.
 
 An instance of class PILDriver is essentially a software stack machine
