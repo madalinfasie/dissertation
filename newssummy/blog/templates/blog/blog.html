@@ -1,0 +1,179 @@
+{% extends "homepage/header.html" %}
+{% load staticfiles %}
+{% load custom_filters %}
+{% block content %}
+
+{% if blog %}
+<div class="container">
+        <div class="row">
+            <br><Br>
+            <div class="col-sm-1">
+                <h1 class="page-top"><b>Blog</b></h1>
+            </div>
+            <div class="col-sm-2 pull-right">
+                {% if request.user.is_anonymous %}
+                    <span title="You have to log in first" style="font-size:25px; color:#004d63" class="pull-right glyphicon glyphicon-plus"></span>
+                {% else %}
+                    <a title="Post a news!" role="button" id="a_add_b" class="btn pull-right glyphicon glyphicon-plus" href="post/" style="display:block;text-decoration:none;decoration:none;color:#004d63;font-size:25px"></a>
+                {% endif %}
+            </div>
+    </div>
+</div>
+
+<!--PAGINATOR-->
+<div class="row">
+    <div class="container">
+    {% if blog.has_other_pages %}
+      <ul class="pagination">
+        {% if blog.has_previous %}
+          <li><a href="?page={{ blog.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+          <li class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+        {% for i in blog.paginator.page_range %}
+          {% if blog.number == i %}
+            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+          {% else %}
+            <li><a href="?page={{ i }}">{{ i }}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if blog.has_next %}
+          <li><a href="?page={{ blog.next_page_number }}">&raquo;</a></li>
+        {% else %}
+          <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+      </ul>
+    {% endif %}
+    </div>
+</div>
+{% for n in blog %}
+    <!--<div class="container">-->
+<table>
+    <tr>
+        <td>
+        <div class="col-sm-1">
+            <center>
+            <div class="row">
+                {% if request.user.is_anonymous %}
+                    <span title="You have to log in first" style="color:#004d63;" class="vote-up-down glyphicon glyphicon-chevron-up"></span>
+                {% else %}
+                        {% if n.id in voted_up_list%}
+                            <a title="It's a good article" role="button" id="a_up" class="vote-up-down btn glyphicon glyphicon-chevron-up disabled" href="blogupvote/{{ n.id }}" style="color:#004d63;display:block;text-decoration:none;decoration:none;"></a>
+                        {% else %}
+                            <a title="It's a good article" role="button" id="a_upp" class="vote-up-down btn glyphicon glyphicon-chevron-up" href="blogupvote/{{ n.id }}" style="color:#004d63;display:block;text-decoration:none;decoration:none;"></a>
+                        {% endif %}
+                {% endif %}
+            </div>
+            <div class="row">
+                {% if request.user.is_anonymous %}
+                    <span class="vote-count">{{ n.vote_up | add:n.vote_down }}</span>
+                {% else %}
+                    <span class="vote-count-margin">{{ n.vote_up | add:n.vote_down }}</span>
+                {% endif %}
+            </div>
+            <div class="row">
+                {% if request.user.is_anonymous %}
+                    <span title="You have to log in first" style="color:#004d63;" class="vote-up-down glyphicon glyphicon-chevron-down"></span>
+                {% else %}
+                        {% if n.id in voted_down_list%}
+                            <a title="It's a bad article" role="button" id="a_down" class="vote-up-down btn glyphicon glyphicon-chevron-down disabled" href="blogdownvote/{{ n.id }}" style="color:#004d63;display:block;text-decoration:none;decoration:none;"></a>
+                        {% else %}
+                            <a title="It's a bad article" role="button" id="a_downn" class="vote-up-down btn glyphicon glyphicon-chevron-down" href="blogdownvote/{{ n.id }}" style="color:#004d63;display:block;text-decoration:none;decoration:none;"></a>
+                        {% endif %}
+                {% endif %}
+            </div>
+            <div class="row">
+                <span class="vote-total text-muted"> {{ n.vote_up| sub:n.vote_down}} votes </span>
+            </div>
+            </center>
+        </div>
+        </td>
+        <td>
+        <div class="col-sm-11">
+            <a class="a-news" href="{{ n.id }}">
+               <div class="row featurette">
+                   {% if forloop.counter|divisibleby:2 %}
+                        <div class="col-md-5">
+                   {% else %}
+                        <div class="col-md-5 col-md-push-7">
+                   {% endif %}
+                        <img class="featurette-image img-responsive center-block" src="/blog{{ n.blog_image.url }}" alt="Image of {{ n.blog_title }}">
+                   </div>
+
+                   {% if forloop.counter|divisibleby:2 %}
+                        <div class="col-md-7">
+                   {% else %}
+                        <div class="col-md-7 col-md-pull-5">
+                   {% endif %}
+                        <h2 class="featurette-heading article-title">{{ n.blog_title }}</h2>
+                        <p class="lead text-muted article-body">{{ n.blog_description }}</p>
+                   </div>
+
+                </div>
+            </a>
+        </div>
+        </td>
+        </tr>
+    <!--</div>-->
+    <div class="container">
+        <hr class="featurette-divider">
+    </div>
+    </table>
+
+{% endfor %}
+<!--PAGINATOR-->
+<div class="row">
+     <div class="container ">
+        {% if blog.has_other_pages %}
+          <ul class="pagination pull-right">
+            {% if blog.has_previous %}
+              <li><a href="?page={{ blog.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+              <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in blog.paginator.page_range %}
+              {% if blog.number == i %}
+                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% else %}
+                <li><a href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+            {% if blog.has_next %}
+              <li><a href="?page={{ blog.next_page_number }}">&raquo;</a></li>
+            {% else %}
+              <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+          </ul>
+        {% endif %}
+    <br>
+     </div>
+</div>
+{% else %}
+<div class="container">
+        <div class="row">
+            <br><Br>
+            <div class="col-sm-3">
+                <h1 class="page-top"><b>Blog</b></h1>
+            </div>
+            <div class="col-sm-5 pull-right">
+                {% if request.user.is_anonymous %}
+                    <span title="You have to log in first" style="font-size:25px; color:#004d63" class="pull-right glyphicon glyphicon-plus"></span>
+                {% else %}
+                    <a title="Post a news!" role="button" id="a_add" class="btn pull-right glyphicon glyphicon-plus" href="post/" style="display:block;text-decoration:none;decoration:none;color:#004d63;font-size:25px"></a>
+                {% endif %}
+            </div>
+    </div>
+    <hr class="featurette-divider">
+</div>
+<div class="container">
+        <div class="row">
+            <br><Br>
+            <center>
+                <h1 class="page-top" style="font-size:23px">There are no blog posts. Press <a href="/blog/post/">here</a> and be the first one to share a news!</h1>
+            </center>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+

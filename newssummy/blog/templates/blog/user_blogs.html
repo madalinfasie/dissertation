@@ -1,0 +1,129 @@
+{% extends "homepage/header.html" %}
+{% load staticfiles %}
+{% load custom_filters %}
+{% block content %}
+
+{% if blog %}
+<div class="container">
+        <div class="row">
+            <br><Br>
+            <div class="col-sm-3">
+                <h1 class="page-top"><b>My Blogs</b></h1>
+            </div>
+            <div class="col-sm-5 pull-right">
+                    <a title="Post a news!" role="button" id="a_add_b" class="btn pull-right glyphicon glyphicon-plus" href="/blog/post/" style="display:block;text-decoration:none;decoration:none;color:#004d63;font-size:25px"></a>
+            </div>
+    </div>
+</div>
+<hr class="featurette-divider">
+<!--PAGINATOR-->
+<div class="row">
+    <div class="container">
+    {% if blog.has_other_pages %}
+      <ul class="pagination">
+        {% if blog.has_previous %}
+          <li><a href="?page={{ blog.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+          <li class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+        {% for i in blog.paginator.page_range %}
+          {% if blog.number == i %}
+            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+          {% else %}
+            <li><a href="?page={{ i }}">{{ i }}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if blog.has_next %}
+          <li><a href="?page={{ blog.next_page_number }}">&raquo;</a></li>
+        {% else %}
+          <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+      </ul>
+    {% endif %}
+    </div>
+</div>
+
+{% for n in blog %}
+<table>
+    <tr>
+        <td>
+            <div class="col-sm-1">
+                <center>
+                    <div class="row">
+                        <a title="Edit article" role="button" id="a_edit_post" class="vote-up-down btn glyphicon glyphicon-edit" href="/blog/user/edit/{{ n.id }}" style="color:#004d63;display:block;text-decoration:none;decoration:none;"></a>
+                    </div>
+                    <div class="row">
+                        <a title="Delete article" role="button" id="a_delete_post" class="vote-up-down confirm-delete btn glyphicon glyphicon-remove" href="/blog/user/delete/{{ n.id }}" style="color:#004d63;display:block;text-decoration:none;decoration:none;"></a>
+                    </div>
+                </center>
+            </div>
+        </td>
+        <td>
+        <div class="col-sm-11">
+            <a class="a-news" href="{{ n.id }}">
+               <div class="row featurette">
+                   {% if forloop.counter|divisibleby:2 %}
+                        <div class="col-md-5">
+                   {% else %}
+                        <div class="col-md-5 col-md-push-7">
+                   {% endif %}
+                        <img class="featurette-image img-responsive center-block" src="/blog{{ n.blog_image.url }}" alt="Image of {{ n.blog_title }}">
+                   </div>
+
+                   {% if forloop.counter|divisibleby:2 %}
+                        <div class="col-md-7">
+                   {% else %}
+                        <div class="col-md-7 col-md-pull-5">
+                   {% endif %}
+                        <h2 class="featurette-heading article-title">{{ n.blog_title }}</h2>
+                        <p class="lead text-muted article-body">{{ n.blog_description }}</p>
+                   </div>
+                </div>
+            </a>
+        </div>
+        </td>
+    </tr>
+</table>
+    <hr class="featurette-divider">
+{% endfor %}
+
+<!--PAGINATOR-->
+<div class="row">
+     <div class="container ">
+
+        {% if blog.has_other_pages %}
+          <ul class="pagination pull-right">
+            {% if blog.has_previous %}
+              <li><a href="?page={{ blog.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+              <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in blog.paginator.page_range %}
+              {% if blog.number == i %}
+                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% else %}
+                <li><a href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+            {% if blog.has_next %}
+              <li><a href="?page={{ blog.next_page_number }}">&raquo;</a></li>
+            {% else %}
+              <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+          </ul>
+        {% endif %}
+    <br>
+     </div>
+</div>
+{% else %}
+<div class="container">
+        <div class="row">
+            <br><Br>
+            <center>
+                <h1 class="page-top">You have no blog posts.</h1>
+            </center>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'homepage/header.html' %}
+
+{% block circle %}
+<div class="container" style="width:100%; background-color:#efefef">
+    <br><br><br>
+    <div class="container marketing">
+        <center>
+            <div class="container">
+                {% if success %}
+                    <div class="row" style="text-align:center">
+                        <h2 class="page-top">Thank you for joining us! You can <a href="/users/login/">log in</a> now.</h2>
+                    </div>
+                    <br><br>
+                    <div class="container" style="color:#004d63">
+                        <a class="lead article-body" href="/" style="display:block;decoration:none;color:inherit;">Go back to the main page</a>
+                    </div>
+                {% endif %}
+
+                {% if has_account %}
+                    <div class="row" style="text-align:center">
+                        <h2 class="page-top">Your account have been already confirmed!</h2>
+                    </div>
+                    <br><br>
+                    <div class="container" style="color:#004d63">
+                        <a class="lead article-body" href="/" style="display:block;decoration:none;color:inherit;">Go back to the main page</a>
+                    </div>
+                {% endif %}
+
+                {% if expired %}
+                    <div class="row" style="text-align:center">
+                        <h2 class="page-top">Your registration link has expired! Please register again!</h2>
+                    </div>
+                    <br><br>
+                    <div class="container" style="color:#004d63">
+                        <a class="lead article-body" href="/" style="display:block;decoration:none;color:inherit;">Go back to the main page</a>
+                    </div>
+                {% endif %}
+
+                {% if used_key %}
+                    <div class="row" style="text-align:center">
+                        <h2 class="page-top">You already used used this key. You can <a href="/users/login/">log in</a> now.</h2>
+                    </div>
+                    <br><br>
+                    <div class="container" style="color:#004d63">
+                        <a class="lead article-body" href="/" style="display:block;decoration:none;color:inherit;">Go back to the main page</a>
+                    </div>
+                {% endif %}
+
+                <div class="row">
+                    <br>
+                </div>
+            </div><!--centered container-->
+        </center>
+    </div> <!--container marketing-->
+</div> <!-- container -->
+
+
+
+
+
+{% endblock %}

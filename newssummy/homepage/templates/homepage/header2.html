@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NewsSummy</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css"/>
+    <meta name="viewport" content = "width=device-width, initial-scale=1.0">
+    <style type="text/css">
+        html, body{
+            height:100%
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+</head>
+<body class="body">
+ <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapsed-data" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">NewsSummy</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="container collapse navbar-collapse" id="collapsed-data" style="overflow: hidden; max-height: none !important; height: auto !important;">
+          <!--<ul class="nav navbar-nav">-->
+            <!--<li class="active"><a href="/">Home <span class="sr-only">(current)</span></a></li>-->
+          <!--</ul>-->
+
+          <ul class="nav navbar-nav navbar-right">
+              <li>
+                  <div class="collapse nav navbar-nav nav-collapse slide-down" id="nav-collapse3">
+                <form method="GET" action="/" class="navbar-form navbar-left">
+                    <div class="form-group" style="display:inline;">
+                        <input type="text" class="form-control" placeholder="Search" name="textbox_search" style=" max-height: none !important; height: auto !important;" >
+                        <button type="submit" class="btn btn-default" name="btn_search">Search</button>
+                    </div>
+
+                </form>
+            </div>
+              </li>
+
+              <li>
+                  <a class="btn btn-default collapsed" data-toggle="collapse" href="#nav-collapse3" aria-expanded="false" aria-controls="nav-collapse3">Search</a>
+             </li>
+          </ul>
+
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+    <div class="container" style="padding-top: 9vh ;min-height: calc(100vh - 70px);">
+
+
+        <div class="row">
+            <div class="jumbotron" >
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

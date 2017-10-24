@@ -1,0 +1,195 @@
+{% extends "homepage/header.html" %}
+{% load staticfiles %}
+{% load custom_filters %}
+{% block content %}
+
+
+<div class="row">
+    <div class="container">
+
+    {% if news.has_other_pages %}
+      <ul class="pagination">
+        {% if news.has_previous %}
+          <li><a href="?page={{ news.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+          <li class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+        {% for i in news.paginator.page_range %}
+          {% if news.number == i %}
+            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+          {% else %}
+            <li><a href="?page={{ i }}">{{ i }}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if news.has_next %}
+          <li><a href="?page={{ news.next_page_number }}">&raquo;</a></li>
+        {% else %}
+          <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+      </ul>
+    {% endif %}
+    </div>
+</div>
+
+{% for n in news %}
+    <hr class="featurette-divider">
+    <!--<div class="container">-->
+<table>
+    <tr>
+        <td>
+        <div class="col-sm-1">
+            <center>
+            <div class="row">
+                {% if request.user.is_anonymous %}
+                    <span title="You have to log in first" style="color:#004d63;" class="vote-up-down glyphicon glyphicon-chevron-up"></span>
+                {% else %}
+                        {% if n.id in voted_up_list%}
+                            <a title="It's a good article" role="button" id="a_up" class="vote-up-down btn glyphicon glyphicon-chevron-up disabled" href="upvote/{{ n.id }}" style="color:#004d63;display:block;text-decoration:none;decoration:none;"></a>
+                        {% else %}
+                            <a title="It's a good article" role="button" id="a_upp" class="vote-up-down btn glyphicon glyphicon-chevron-up" href="upvote/{{ n.id }}" style="color:#004d63;display:block;text-decoration:none;decoration:none;"></a>
+                        {% endif %}
+                {% endif %}
+            </div>
+            <div class="row">
+                {% if request.user.is_anonymous %}
+                    <span class="vote-count">{{ n.vote_up | add:n.vote_down }}</span>
+                {% else %}
+                    <span class="vote-count-margin">{{ n.vote_up | add:n.vote_down }}</span>
+                {% endif %}
+            </div>
+            <div class="row">
+                {% if request.user.is_anonymous %}
+                    <span title="You have to log in first" style="color:#004d63;" class="vote-up-down glyphicon glyphicon-chevron-down"></span>
+                {% else %}
+                        {% if n.id in voted_down_list%}
+                            <a title="It's a bad article" role="button" id="a_down" class="vote-up-down btn glyphicon glyphicon-chevron-down disabled" href="downvote/{{ n.id }}" style="color:#004d63;display:block;text-decoration:none;decoration:none;"></a>
+                        {% else %}
+                            <a title="It's a bad article" role="button" id="a_downn" class="vote-up-down btn glyphicon glyphicon-chevron-down" href="downvote/{{ n.id }}" style="color:#004d63;display:block;text-decoration:none;decoration:none;"></a>
+                        {% endif %}
+                {% endif %}
+            </div>
+            <div class="row">
+                <span class="vote-total text-muted"> {{ n.vote_up| sub:n.vote_down}} votes </span>
+            </div>
+            </center>
+        </div>
+        </td>
+        <td>
+        <div class="col-sm-11">
+            <a class="a-news" href="{{ n.id }}">
+               <div class="row featurette">
+                    {% if forloop.counter|divisibleby:2 %}
+                        <div class="col-md-5">
+                    {% else %}
+                        <div class="col-md-5 col-md-push-7">
+                    {% endif %}
+                        <img class="featurette-image img-responsive center-block" width="500px" height="200px" src="{{ n.article_img_href }}" alt="Image of {{ n.article_title }}">
+                    </div>
+
+                    {% if forloop.counter|divisibleby:2 %}
+                        <div class="col-md-7">
+                    {% else %}
+                        <div class="col-md-7 col-md-pull-5">
+                    {% endif %}
+                            <h2 class="featurette-heading article-title">{{ n.article_title }}</h2>
+                            <p class="lead text-muted article-body">{{ n.article_description }}</p>
+                        </div>
+
+                </div>
+            </a>
+        </div>
+        </td>
+    </tr>
+    </table>
+    <!--</div>-->
+{% endfor %}
+
+
+<div class="row">
+     <div class="container ">
+         <hr class="featurette-divider">
+        {% if news.has_other_pages %}
+          <ul class="pagination pull-right">
+            {% if news.has_previous %}
+              <li><a href="?page={{ news.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+              <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in news.paginator.page_range %}
+              {% if news.number == i %}
+                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% else %}
+                <li><a href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+            {% if news.has_next %}
+              <li><a href="?page={{ news.next_page_number }}">&raquo;</a></li>
+            {% else %}
+              <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+          </ul>
+        {% endif %}
+    <br>
+     </div>
+    <br>
+</div>
+
+
+{% endblock %}
+
+{% block circle %}
+    <div class="circle-isvisible container" style="width:100%; background-color:#efefef">
+        <br><br><br>
+        <center>
+            <h1 class="page-top"><b>Top News of the Week</b></h1>
+        </center>
+        <br>
+        <div class="container marketing">
+             {% for k in keywords %}
+                <div class="col-md-4">
+                    <a class="a-news" href="{{ k.id }}" style="text-decoration:none;">
+                    <center>
+                        <div class="row">
+                            <div class="circle-avatar" style="background-image:url({{ k.article_img_href }})"></div>
+                            <!--<img class="img-circle" src="{{ k.article_img_href }}" alt="Image of {{ k.article_title }}" width="180vw" height="180vh">-->
+                            <br><br>
+                            <p class="lead text-muted article-body">Ovarall Rating: {{ k.vote_up| add:k.vote_down}}</p>
+                            <h1 class="featurette-heading article-title" >{{ k.article_title }}</h1>
+                            <p class="lead text-muted article-body">{{ k.article_description }}</p>
+                        </div>
+                    </center>
+                    </a>
+                </div><!-- /.col-lg-4 -->
+        {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block carousel %}<br>
+<br><br>
+    <div>
+        <center><h1 class="page-top"><b>Top News of the Week</b></h1></center>
+    </div>
+    {% for k in keywords %}
+        {% if forloop.counter == 1 %}
+            <div class="item active" style="background-color:white">
+        {% else %}
+            <div class="item" style="background-color:white">
+        {% endif %}
+        <div class="container">
+            <a class="a-news" href="{{ k.id }}" style="text-decoration:none;">
+            <center>
+                <div class="row">
+                    <div class="circle-avatar" style="background-image:url({{ k.article_img_href }})"></div>
+                    <br>
+                    <p class="lead text-muted article-body">Ovarall Rating: {{ k.vote_up| add:k.vote_down}}</p>
+                    <h1 class="featurette-heading article-title" >{{ k.article_title }}</h1>
+                    <p class="lead text-muted article-body">{{ k.article_description }}</p>
+                </div>
+            </center>
+            </a>
+        </div><!-- /.col-lg-4 -->
+            </div>
+    {% endfor %}
+
+{% endblock %}

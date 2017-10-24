@@ -1,0 +1,49 @@
+{% extends "homepage/header.html" %}
+
+{% block content %}
+    {% load social_share %}
+    {% load staticfiles %}
+<div class="container" style="width:95%">
+    <center>
+        <div class="row">
+            <br><br><br>
+            <div class="row" >
+                <img class="displayed" src="/blog{{ blogarticles.blog_image.url }}" alt="{{news.article_title}}" style="max-width:100%; max-height:100%; min-height:100%; max-height:100%;">
+            </div>
+            <BR>
+        </div>
+        <div class="row">
+            <h1 class="article-title" style="color:#004D63">
+                <b>{{ blogarticles.blog_title }}</b>
+            </h1>
+            <p class="text-muted">{{ blogarticles.create_date }}</p>
+        </div>
+
+    </center>
+    <div class="row">
+        <h3 class="article-body">{{ blogarticles.blog_text|linebreaks }}</h3>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row">
+        <br>
+        <div class="col-sm-6">
+            <div class="row">
+                <h4 class="pull-left article-footer">
+                    Posted by: {{ blogarticles.author.first_name }} {{ blogarticles.author.last_name }}
+                </h4>
+            </div>
+            <div class="row">
+                <h4 class="pull-left article-footer">
+                    Share this: <a title="Share this article" href="http://www.facebook.com/sharer/sharer.php?u=http://testblitz.com:8000/blog/shared/{{ blogarticles.id }}" target="_blank" style="padding:0 5px 0 0;"><img class="pull-right img-responsive share-img-size"  src="{% static 'img/Fshare.png' %}"/></a>
+                </h4>
+            </div>
+        </div>
+
+
+    </div>
+    <br>
+
+    </div>
+{% endblock %}

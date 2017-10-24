@@ -1,0 +1,3 @@
+celery -A newssummy worker -l info
+celery -A newssummy beat -l info
+
