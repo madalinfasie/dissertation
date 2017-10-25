@@ -22,7 +22,7 @@ urlpatterns = [
     url(r'^contact/', include('contact.urls')),
     url(r'^blog/', include('blog.urls')),
     url(r'^users/', include('registerapp.urls')),
-    url(r'statistics/', include('statisticsapp.urls')),
+    url(r'^statistics/', include('statisticsapp.urls')),
     # social authentication
     url(r'^oauth/', include('social_django.urls', namespace='social')),
 ]
