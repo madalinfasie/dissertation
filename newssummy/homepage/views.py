@@ -1,13 +1,15 @@
+import re
+from datetime import datetime, timedelta
+
 from django.shortcuts import render
-from django.db.models import F
-from summarymodule.models import News, UserNews
+from django.db.models import F, Q
+from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
 from summarymodule import tasks
-import re
-from django.db.models import Q
-from django.http import HttpResponseRedirect
-from datetime import datetime, timedelta
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+from summarymodule.models import News, UserNews
+from summarymodule import get_summary
 
 language = "english"
 sentence_count = 3
@@ -19,6 +21,7 @@ news_sites = [#'http://rss.nytimes.com/services/xml/rss/nyt/World.xml',
 # MAIN FUNCTION TO RENDER HOMEPAGE
 def index(request):
     # get all news ordered desc by article_date
+    get_summary.make_summary(news_sites, language, sentence_count)
     news_list = News.objects.all().order_by('-article_date')[:500]
     # Paginator {
     page = request.GET.get('page',1)

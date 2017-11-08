@@ -8,8 +8,11 @@ from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lsa import LsaSummarizer as Summarizer
 from sumy.nlp.stemmers import Stemmer
 from sumy.utils import get_stop_words
+
 from .feed_parser import parse_rss
 from .models import News, ProcedureDuplicates
+from .generate_tags import get_tags
+from statisticsapp.models import Tags, NewsTags
 
 language = "english"
 sentence_count = 3
@@ -39,6 +42,22 @@ def make_summary(news_sites, language, sentence_count):
 
                 news_db = News(article_title=mylist[0], article_description=mylist[1], article_date=mylist[2], article_url=mylist[3], article_img_href=mylist[4], article_text=summary)
                 news_db.save()
+
+                tags = get_tags(text)
+                tags_db = Tags.objects.values("tag_name")
+
+                for tag in tags:
+                    if tag not in tags_db:
+                        tag_db = Tags(tag_name=tag)
+                        tag_db.save()
+                        tagnews_db = NewsTags(id_tags=tag_db, id_news=news_db)
+                        print(tag_db.id)
+                        print(news_db.id)
+                        tagnews_db.save()
+                    else:
+                        tagnews_db = NewsTags(id_tags=Tags.get(tag_name=tag), id_news=news_db.id)
+                        tagnews_db.save()
+
 
     try:
         proc = ProcedureDuplicates()

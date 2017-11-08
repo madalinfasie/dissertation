@@ -3,5 +3,10 @@
 {% block content %}
 
 <h1>CEA MAI STATISTICA</h1>
+{% for bigram in best_bigrams %}
+	<p>{{bigram}}</p> 
+{% endfor %}
+
+<br>
 
 {% endblock %}
