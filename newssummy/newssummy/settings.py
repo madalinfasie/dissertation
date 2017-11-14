@@ -27,7 +27,7 @@ DEBUG = True
 
 # If DEBUG=TRUE then this list would be empty, otherwise it should contain my host (after I put this on production, I
 # should append the site url
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.0.192', 'testblitz.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'registerapp',
     'blog',
     'statisticsapp',
+    'usersummaryapp',
     'social_django',
     'django_social_share',
     'django_celery_results',

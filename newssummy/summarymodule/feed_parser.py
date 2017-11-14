@@ -30,7 +30,7 @@ def parse_rss(myurl):
     if max_db_date is not None:
         max_news_db_date = max_db_date
     else:
-        max_news_db_date = datetime.now(pytz.utc) - timedelta(days=7)
+        max_news_db_date = datetime.now(pytz.utc) - timedelta(days=100)
 
     for news in d.entries:
         news_link = news.link

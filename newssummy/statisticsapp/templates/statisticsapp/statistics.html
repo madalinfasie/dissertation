@@ -3,9 +3,18 @@
 {% block content %}
 
 <h1>CEA MAI STATISTICA</h1>
-{% for bigram in best_bigrams %}
-	<p>{{bigram}}</p> 
-{% endfor %}
+
+<div class="col-md-5 tag-cloud">
+    {% for bigram in best_bigrams %}
+    	{% if bigram.1 < 23 %}
+        	<a href="/{{ bigram.0 }}" class="size-{{ bigram.1 }}">{{ bigram.0 }}</a> 
+    	{% else %}
+    		<a href="/{{ bigram.0 }}" class="size-rest">{{ bigram.0 }}</a> 
+    	{% endif %}
+    {% endfor %}
+</div>
+
+
 
 <br>
 

@@ -6,6 +6,7 @@ from summarymodule.models import News
 
 class Tags(models.Model):
 	tag_name = models.CharField(max_length=200)
+	tag_score = models.IntegerField(default=0)
 	create_date = models.DateTimeField(default=timezone.now, blank=True)
 
 	def __str__(self):

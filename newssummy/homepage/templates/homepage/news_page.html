@@ -13,6 +13,9 @@
             {{ news.article_title }}
         </h1>
         <p class="text-muted">{{ news.article_date }}</p>
+        {% for tag in tags %}
+            <a style="text-decoration:none;" href="/{{ tag.0 }}"><span class="label label-default">{{ tag.0 }}</span></a>
+        {% endfor %}
     </div>
 </center>
 <div class="modal-body">

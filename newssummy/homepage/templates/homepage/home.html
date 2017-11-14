@@ -145,7 +145,7 @@
         </center>
         <br>
         <div class="container marketing">
-             {% for k in keywords %}
+             {% for k in top_news %}
                 <div class="col-md-4">
                     <a class="a-news" href="{{ k.id }}" style="text-decoration:none;">
                     <center>
@@ -165,12 +165,13 @@
     </div>
 {% endblock %}
 
+<!-- For small screens -->
 {% block carousel %}<br>
 <br><br>
     <div>
         <center><h1 class="page-top"><b>Top News of the Week</b></h1></center>
     </div>
-    {% for k in keywords %}
+    {% for k in top_news %}
         {% if forloop.counter == 1 %}
             <div class="item active" style="background-color:white">
         {% else %}

@@ -1,0 +1,54 @@
+{% extends "homepage/header.html" %}
+{% block circle %}
+<div class="container" style="width:100%; background-color:#efefef">
+    <br><br><br>
+    <div class="container marketing">
+        <div class="container" style="color:#004d63">
+        	<h1 class="page-top">Summarize your own text</h1> 
+           	<form method="post">
+                {%csrf_token%}
+                {% for error in form.non_field_errors %}
+                <div class="form-group has-errors text-danger small">
+                    {{error}}
+                </div>
+                {% endfor %}
+
+                <div class="form-group has-errors text-danger small">
+                    {{ form.sentences_number.errors }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.sentences_number }}
+                </div>
+                
+                <div class="form-group has-errors text-danger small">
+                    {{ form.text.errors }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.text }}
+                </div>
+
+                <input class="btn btn-info" id="make_summary"  type="submit" value="Make the summary" />
+            </form>
+                <div class="row">
+                    <br>
+                </div>
+
+
+
+        </div> <!--container with style-->
+    </div> <!--container marketing-->
+</div> <!--first container-->
+
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="container ">
+    	<h3 class="article-body">{{ summary | linebreaks}} </h3>
+    </div>
+    <br>
+</div>
+
+{% endblock %}

@@ -19,8 +19,8 @@ def get_tags(text):
     finder_b.apply_freq_filter(3)
     finder_t.apply_freq_filter(2)
 
-    finder_b.apply_word_filter(lambda w: w.lower() in stopwords)
-    finder_t.apply_word_filter(lambda w: w.lower() in stopwords)
+    finder_b.apply_word_filter(lambda w: len(w) < 3 or w.lower() in stopwords)
+    finder_t.apply_word_filter(lambda w: len(w) < 3 or w.lower() in stopwords)
     
     best_bigrams = finder_b.score_ngrams(bigram_measures.pmi)
     best_trigrams = finder_t.score_ngrams(trigram_measures.pmi)
@@ -34,8 +34,8 @@ def get_tags(text):
     tags_list = []
     for pair in best_tags:
         if len(pair[0]) == 3:
-            tags_list.append(pair[0][0] + " " + pair[0][1] + " " + pair[0][2])
+            tags_list.append((pair[0][0] + " " + pair[0][1] + " " + pair[0][2], pair[1]))
         else:
-            tags_list.append(pair[0][0] + " " + pair[0][1])
+            tags_list.append((pair[0][0] + " " + pair[0][1], pair[1]))
 
     return tags_list

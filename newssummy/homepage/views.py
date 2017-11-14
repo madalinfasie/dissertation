@@ -1,15 +1,17 @@
 import re
 from datetime import datetime, timedelta
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.db.models import F, Q
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
-from summarymodule import tasks
+from django.views.generic import DetailView
 
+from summarymodule import tasks
 from summarymodule.models import News, UserNews
 from summarymodule import get_summary
+from statisticsapp.models import Tags, NewsTags
 
 language = "english"
 sentence_count = 3
@@ -21,7 +23,7 @@ news_sites = [#'http://rss.nytimes.com/services/xml/rss/nyt/World.xml',
 # MAIN FUNCTION TO RENDER HOMEPAGE
 def index(request):
     # get all news ordered desc by article_date
-    get_summary.make_summary(news_sites, language, sentence_count)
+    #get_summary.make_summary(news_sites, language, sentence_count)
     news_list = News.objects.all().order_by('-article_date')[:500]
     # Paginator {
     page = request.GET.get('page',1)
@@ -33,14 +35,9 @@ def index(request):
     except EmptyPage:
         news = paginator.page(paginator.num_pages)
     # }
-    # # get random news to display on top of the page
-    # my_ids = News.objects.values_list('id', flat=True)
-    # n = 3
-    # rand_ids = random.sample(list(my_ids), n)
-    # keywords = News.objects.filter(id__in=rand_ids)
 
     # get most popular news
-    keywords = News.objects.filter(article_date__gte=datetime.now()-timedelta(days=7)).order_by(F('vote_up') - F('vote_down'))[::-1][:3]
+    top_news = News.objects.filter(article_date__gte=datetime.now()-timedelta(days=7)).order_by(F('vote_up') - F('vote_down'))[::-1][:3]
 
     # lista stirilor votate -- o folosesc ca sa imi dau seama ce este disabled si ce e enabled
     if request.user.is_anonymous:
@@ -57,24 +54,38 @@ def index(request):
     # make the search {
     if request.GET.get('textbox_search'):
         query_string = ''
-        found_entries = None
+        # found_entries = None
         if ('textbox_search' in request.GET) and request.GET['textbox_search'].strip():
             query_string = request.GET['textbox_search']
             entry_query = get_query(query_string, ['article_title', 'article_description', 'article_text' ])
 
             if query_string == '':
-                news = News.objects.all().order_by('-article_title')
+                news = News.objects.all().order_by('-article_date')
             else:
-                news = News.objects.filter(entry_query).order_by('-article_title')
-        return render(request, 'homepage/home.html', {'news': news, 'keywords': keywords})
+                news = News.objects.filter(entry_query).order_by('-article_date')
+        return render(request, 'homepage/home.html', {'news': news, 'top_news': top_news})
     # }
     # render the page
     return render(request, 'homepage/home.html', {'news': news,
-                                                  'keywords': keywords,
+                                                  'top_news': top_news,
                                                   'voted_up_list': voted_up_list,
                                                   'voted_down_list': voted_down_list,
                                                   'currpage':'home'})
 
+# Render the page containing the selected news
+def selected_news_page(request, pk):
+    news = News.objects.get(id=pk)
+    tags = Tags.objects.filter(newstags__id_news=news.id).values_list('tag_name')
+
+    return render(request, 'homepage/news_page.html', {'news': news, 'tags':tags})
+
+# Render the page with news by tag_name selected
+def news_by_selected_tag(request, tag_name):
+    top_news = News.objects.filter(article_date__gte=datetime.now()-timedelta(days=7)).order_by(F('vote_up') - F('vote_down'))[::-1][:3]
+
+    tag_id = Tags.objects.get(tag_name=tag_name)
+    news = News.objects.filter(newstags__id_tags=tag_id).order_by('-article_date')
+    return render(request, 'homepage/home.html', {'news': news, 'top_news': top_news})
 
 # SEARCH ALGORITHM
 # credits: http://julienphalip.com/post/2825034077/adding-search-to-a-django-site-in-a-snap
