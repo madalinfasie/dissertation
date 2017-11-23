@@ -5,7 +5,6 @@ from .models import BlogArticles, UserBlogs
 from .forms import AddBlogForm
 from datetime import datetime, timedelta
 from django.db.models import F
-from homepage.views import get_query
 
 
 def index(request):
@@ -41,15 +40,14 @@ def index(request):
 
     # make the search {
     if request.GET.get('textbox_search'):
-        if ('textbox_search' in request.GET) and request.GET['textbox_search'].strip():
-            query_string = request.GET['textbox_search']
-            entry_query = get_query(query_string, ['blog_title', 'blog_description', 'blog_text' ])
-
-            if query_string == '':
-                blog = BlogArticles.objects.all().order_by('-blog_title')
-            else:
-                blog = BlogArticles.objects.filter(entry_query).order_by('-blog_title')
-        return render(request, 'blog/blog.html', {'blog': blog, 'keywords': keywords})
+        vector = SearchVector('blog_title') + \
+                 SearchVector('blog_description') + \
+                 SearchVector('blog_text') 
+        news = News.objects.annotate(search=vector).filter(
+            search=SearchQuery(request.GET.get('textbox_search'))).order_by('-create_date', 'blog_title').distinct('create_date', 'blog_title')
+    else:
+        blog = BlogArticles.objects.all().order_by('-create_date')
+    return render(request, 'blog/blog.html', {'blog': blog, 'keywords': keywords})
     # }
     # render the page
     return render(request, 'blog/blog.html', {'blog': blog,

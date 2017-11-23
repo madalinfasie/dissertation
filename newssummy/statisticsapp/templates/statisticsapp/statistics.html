@@ -6,8 +6,8 @@
 
 <div class="col-md-5 tag-cloud">
     {% for bigram in best_bigrams %}
-    	{% if bigram.1 < 23 %}
-        	<a href="/{{ bigram.0 }}" class="size-{{ bigram.1 }}">{{ bigram.0 }}</a> 
+    	{% if bigram.1 < 11 %}
+        	<a href="/{{ bigram.0 }}" class="size-{{ bigram.1 }}">{{ bigram.0 }} {{bigram.1}}</a> 
     	{% else %}
     		<a href="/{{ bigram.0 }}" class="size-rest">{{ bigram.0 }}</a> 
     	{% endif %}

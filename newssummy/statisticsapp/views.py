@@ -1,4 +1,8 @@
+import numpy as np
+from collections import Counter
 from datetime import datetime, timedelta
+from sklearn.feature_extraction.text import TfidfVectorizer
+from nltk.corpus import stopwords
 
 from django.shortcuts import render
 from django.db.models import Count, F, Q
@@ -6,11 +10,8 @@ from django.db.models import Count, F, Q
 from summarymodule.models import News
 from summarymodule.generate_tags import get_tags
 from .models import Tags, NewsTags
-from homepage.views import normalize_query, get_query
 
 def index(request):
-	news_article_text = News.objects.filter(article_date__gte=datetime.now()-timedelta(days=7)).values()
-
 	tags_list = get_best_tags()
 
 	return render(request, \
@@ -25,12 +26,22 @@ def news_by_selected_tag(request, tag_name):
 	return render(request, 'homepage/home.html', {'news': news, 'top_news': top_news})
 
 def get_best_tags():
-	tags_days_range = 7
+	tags_days_range = 30
 
-	tags = Tags.objects \
+	tags = NewsTags.objects \
+			.select_related('id_tags').all() \
 			.filter(create_date__gte=datetime.now()-timedelta(days=tags_days_range)) \
-			.annotate(tag_count = Count('tag_name')) \
-			.order_by('-tag_count') \
-			.values('tag_name', 'tag_score', 'newstags__id_news', 'tag_count') \
-	
-	return [(tag['tag_name'], tag['tag_count'], tag['newstags__id_news']) for tag in tags]
+			.values('id_tags__tag_name', 'id_tags__tag_score', 'id_news') \
+			.order_by('-id_tags__tag_name') 
+
+	tags_name_list = [tag['id_tags__tag_name'] for tag in tags]
+	tags_name_count = Counter(tags_name_list)
+
+	final_list = []
+	names_list =[]
+	for tag in tags:
+		if tag['id_tags__tag_name'] not in names_list:
+			score = 10/(tags_name_count[tag['id_tags__tag_name']] * tag['id_tags__tag_score'])
+			final_list.append((tag['id_tags__tag_name'], score, tag['id_news']))
+			names_list.append(tag['id_tags__tag_name'])
+	return final_list

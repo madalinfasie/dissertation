@@ -1,26 +1,16 @@
 
 /* wordcloud */
-.tag-cloud a.size-4 { font-size: 1.1em }
-.tag-cloud a.size-5 { font-size: 1.1em }
-.tag-cloud a.size-6 { font-size: 1.2em }
-.tag-cloud a.size-7 { font-size: 1.2em }
-.tag-cloud a.size-8 { font-size: 1.3em }
-.tag-cloud a.size-9 { font-size: 1.3em }
-.tag-cloud a.size-10 { font-size: 1.4em }
-.tag-cloud a.size-11 { font-size: 1.4em }
-.tag-cloud a.size-12 { font-size: 1.5em }
-.tag-cloud a.size-13 { font-size: 1.5em }
-.tag-cloud a.size-14 { font-size: 1.6em }
-.tag-cloud a.size-15 { font-size: 1.6em }
-.tag-cloud a.size-16 { font-size: 1.7em }
-.tag-cloud a.size-17 { font-size: 1.7em }
-.tag-cloud a.size-18 { font-size: 1.8em }
-.tag-cloud a.size-19 { font-size: 1.8em }
-.tag-cloud a.size-20 { font-size: 1.9em }
-.tag-cloud a.size-21 { font-size: 1.9em }
-.tag-cloud a.size-22 { font-size: 2em }
-.tag-cloud a.size-23 { font-size: 2em }
-.tag-cloud a.size-rest { font-size: 2.1em }
+.tag-cloud a.size-1 { font-size: 1.1em }
+.tag-cloud a.size-2 { font-size: 1.2em }
+.tag-cloud a.size-3 { font-size: 1.3em }
+.tag-cloud a.size-4 { font-size: 1.4em }
+.tag-cloud a.size-5 { font-size: 1.5em }
+.tag-cloud a.size-6 { font-size: 1.6em }
+.tag-cloud a.size-7 { font-size: 1.7em }
+.tag-cloud a.size-8 { font-size: 1.8em }
+.tag-cloud a.size-9 { font-size: 1.9em }
+.tag-cloud a.size-10 { font-size: 2.0em }
+.tag-cloud a.size-rest { font-size: 2.5em }
 
 .a-news{
   display:block;
