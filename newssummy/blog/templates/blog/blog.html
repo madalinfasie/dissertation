@@ -55,12 +55,12 @@
             <center>
             <div class="row">
                 {% if request.user.is_anonymous %}
-                    <span title="You have to log in first" style="color:#004d63;" class="vote-up-down glyphicon glyphicon-chevron-up"></span>
+                    <span title="You have to log in first" class="vote-up-down glyphicon glyphicon-chevron-up"></span>
                 {% else %}
                         {% if n.id in voted_up_list%}
-                            <a title="It's a good article" role="button" id="a_up" class="vote-up-down btn glyphicon glyphicon-chevron-up disabled" href="blogupvote/{{ n.id }}" style="color:#004d63;display:block;text-decoration:none;decoration:none;"></a>
+                            <a title="It's a good article" role="button" id="a_up" class="vote-up-down btn glyphicon glyphicon-chevron-up disabled" href="blogupvote/{{ n.id }}" ></a>
                         {% else %}
-                            <a title="It's a good article" role="button" id="a_upp" class="vote-up-down btn glyphicon glyphicon-chevron-up" href="blogupvote/{{ n.id }}" style="color:#004d63;display:block;text-decoration:none;decoration:none;"></a>
+                            <a title="It's a good article" role="button" id="a_upp" class="vote-up-down btn glyphicon glyphicon-chevron-up" href="blogupvote/{{ n.id }}" ></a>
                         {% endif %}
                 {% endif %}
             </div>
@@ -73,12 +73,12 @@
             </div>
             <div class="row">
                 {% if request.user.is_anonymous %}
-                    <span title="You have to log in first" style="color:#004d63;" class="vote-up-down glyphicon glyphicon-chevron-down"></span>
+                    <span title="You have to log in first" class="vote-up-down glyphicon glyphicon-chevron-down"></span>
                 {% else %}
                         {% if n.id in voted_down_list%}
-                            <a title="It's a bad article" role="button" id="a_down" class="vote-up-down btn glyphicon glyphicon-chevron-down disabled" href="blogdownvote/{{ n.id }}" style="color:#004d63;display:block;text-decoration:none;decoration:none;"></a>
+                            <a title="It's a bad article" role="button" id="a_down" class="vote-up-down btn glyphicon glyphicon-chevron-down disabled" href="blogdownvote/{{ n.id }}" ></a>
                         {% else %}
-                            <a title="It's a bad article" role="button" id="a_downn" class="vote-up-down btn glyphicon glyphicon-chevron-down" href="blogdownvote/{{ n.id }}" style="color:#004d63;display:block;text-decoration:none;decoration:none;"></a>
+                            <a title="It's a bad article" role="button" id="a_downn" class="vote-up-down btn glyphicon glyphicon-chevron-down" href="blogdownvote/{{ n.id }}"></a>
                         {% endif %}
                 {% endif %}
             </div>

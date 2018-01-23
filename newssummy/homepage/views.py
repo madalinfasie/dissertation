@@ -101,7 +101,7 @@ def news_by_selected_tag(request, tag_name):
 
 # VOTING SYSTEM
 def upvote(request, news_id):
-    if request.is_ajax():
+    if request.method == "GET":
         user = request.user
         news = News.objects.get(pk=news_id)
         try:
@@ -116,7 +116,7 @@ def upvote(request, news_id):
             usernews_add = UserNews(id_user=user, id_news=news, vote=1)
             usernews_add.save()
             usernews_add.save()
-            return render(request, 'homepage/voting_ajax.html',{'news_id':news_id})
+            return HttpResponseRedirect('/')
         if usernews.vote == -1:
             # daca userul a mai adaugat in trecut un vot, dar s-a razgandit si il schimba, atunci il anulez si incrementez
             # votul opus
@@ -128,7 +128,7 @@ def upvote(request, news_id):
             usernews.last_date = datetime.now()
             usernews.vote = 1
             usernews.save()
-            return render(request, 'homepage/voting_ajax.html',{'news_id':news_id})
+            return HttpResponseRedirect('/')
     else:
         news_id = 0
     return None
@@ -149,7 +149,7 @@ def downvote(request, news_id):
             news.save()
             usernews_add = UserNews(id_user = user, id_news = news, vote = -1)
             usernews_add.save()
-            return HttpResponse(news_id)
+            return HttpResponseRedirect('/')
 
         if usernews.vote == 1:
             news.vote_up -= 1
@@ -158,7 +158,7 @@ def downvote(request, news_id):
             usernews.last_date = datetime.now()
             usernews.vote = -1
             usernews.save()
-            return HttpResponse(news_id)
+            return HttpResponseRedirect('/')
     else:
         news_id = 0
     return None
