@@ -11,9 +11,9 @@ from django.contrib.postgres.search import SearchVector
 from django.contrib.postgres.search import SearchQuery
 
 from summarymodule import tasks
-from summarymodule.models import News, UserNews
+from summarymodule.models import News, UserNews, Tags, NewsTags
 from summarymodule import get_summary
-from statisticsapp.models import Tags, NewsTags
+
 
 language = "english"
 sentence_count = 3

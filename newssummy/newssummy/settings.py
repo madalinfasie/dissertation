@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'contact',
     'registerapp',
     'blog',
-    'statisticsapp',
     'usersummaryapp',
     'social_django',
     'django_social_share',

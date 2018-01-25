@@ -12,9 +12,9 @@ from sumy.nlp.stemmers import Stemmer
 from sumy.utils import get_stop_words
 
 from .feed_parser import parse_rss
-from .models import News, ProcedureDuplicates
+from .models import News, ProcedureDuplicates, Tags, NewsTags
 from .generate_tags import get_tags
-from statisticsapp.models import Tags, NewsTags
+
 
 # language = "english"
 # sentence_count = 3
