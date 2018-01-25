@@ -137,7 +137,7 @@ def register_user(request):
                 #
                 # send_mail(email_subject, email_body, 'messager@localhost.com', [user.email], fail_silently=False)
 
-                return HttpResponseRedirect('/users/success/')
+                return HttpResponseRedirect('/')
     else:
         register_form = UserForm()
 
@@ -145,7 +145,7 @@ def register_user(request):
 
 
 def success(request):
-    return render(request, 'register/success.html')
+    return HttpResponseRedirect('/')
 
 
 # confirm registration

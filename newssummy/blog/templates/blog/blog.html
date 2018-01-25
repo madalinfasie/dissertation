@@ -3,23 +3,25 @@
 {% load custom_filters %}
 {% block content %}
 
-{% if blog %}
+
 <div class="container">
         <div class="row">
             <br><Br>
-            <div class="col-sm-1">
+            <div class="col-sm-3">
                 <h1 class="page-top"><b>Blog</b></h1>
             </div>
-            <div class="col-sm-2 pull-right">
+            <div class="col-sm-5 pull-right">
                 {% if request.user.is_anonymous %}
-                    <span title="You have to log in first" style="font-size:25px; color:#004d63" class="pull-right glyphicon glyphicon-plus"></span>
+                    <span title="You have to log in first" class="pull-right glyphicon glyphicon-plus span-add-blog"></span>
                 {% else %}
-                    <a title="Post a news!" role="button" id="a_add_b" class="btn pull-right glyphicon glyphicon-plus" href="post/" style="display:block;text-decoration:none;decoration:none;color:#004d63;font-size:25px"></a>
+                    <a title="Post a news!" role="button" id="a_add" class="btn pull-right" href="post/"><span title="You have to log in first" class="glyphicon glyphicon-plus span-add-blog"></span></a>
                 {% endif %}
             </div>
     </div>
+
 </div>
 
+{% if blog %}
 <!--PAGINATOR-->
 <div class="row">
     <div class="container">
@@ -149,30 +151,19 @@
      </div>
 </div>
 {% else %}
-<div class="container">
-        <div class="row">
-            <br><Br>
-            <div class="col-sm-3">
-                <h1 class="page-top"><b>Blog</b></h1>
-            </div>
-            <div class="col-sm-5 pull-right">
-                {% if request.user.is_anonymous %}
-                    <span title="You have to log in first" style="font-size:25px; color:#004d63" class="pull-right glyphicon glyphicon-plus"></span>
-                {% else %}
-                    <a title="Post a news!" role="button" id="a_add" class="btn pull-right glyphicon glyphicon-plus" href="post/" style="display:block;text-decoration:none;decoration:none;color:#004d63;font-size:25px"></a>
-                {% endif %}
-            </div>
-    </div>
-    <hr class="featurette-divider">
-</div>
-<div class="container">
-        <div class="row">
-            <br><Br>
-            <center>
-                <h1 class="page-top" style="font-size:23px">There are no blog posts. Press <a href="/blog/post/">here</a> and be the first one to share a news!</h1>
-            </center>
-    </div>
-</div>
+  <div class="container">
+          <div class="row">
+              <br><Br>
+              <center>
+                  {% if request.user.is_anonymous %}
+                      <h1 class="page-top" style="font-size:23px">There are no blog posts yet.</h1>
+                  {% else %}
+                      <h1 class="page-top" style="font-size:23px">There are no blog posts. Press <a href="/blog/post/">here</a> and be the first one to share a news!</h1>
+                  {% endif %}
+              </center>
+      </div>
+  </div>
+  <hr class="featurette-divider">
 {% endif %}
 
 {% endblock %}

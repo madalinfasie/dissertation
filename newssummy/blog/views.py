@@ -47,7 +47,6 @@ def index(request):
             search=SearchQuery(request.GET.get('textbox_search'))).order_by('-create_date', 'blog_title').distinct('create_date', 'blog_title')
     else:
         blog = BlogArticles.objects.all().order_by('-create_date')
-    return render(request, 'blog/blog.html', {'blog': blog, 'keywords': keywords})
     # }
     # render the page
     return render(request, 'blog/blog.html', {'blog': blog,
