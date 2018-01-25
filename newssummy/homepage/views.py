@@ -28,7 +28,8 @@ def index(request):
     #get_summary.make_summary(news_sites, language, sentence_count)
     
     # get most popular news
-    top_news = News.objects.filter(article_date__gte=datetime.now()-timedelta(days=7)).order_by(F('vote_up') - F('vote_down'))[::-1][:3]
+    top_news = News.objects.filter(article_date__gte=datetime.now()-timedelta(days=7))\
+        .order_by((F('vote_up') - F('vote_down') + 1/2 * (F('vote_up') + F('vote_down'))))[::-1][:3]
 
     # lista stirilor votate -- o folosesc ca sa imi dau seama ce este disabled si ce e enabled
     if request.user.is_anonymous:
