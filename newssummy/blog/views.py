@@ -1,33 +1,18 @@
+from datetime import datetime, timedelta
+
+from django.db.models import F
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
+from django.contrib.postgres.search import SearchVector
+from django.contrib.postgres.search import SearchQuery
+
 from .models import BlogArticles, UserBlogs
 from .forms import AddBlogForm
-from datetime import datetime, timedelta
-from django.db.models import F
+
 
 
 def index(request):
-    # get all news ordered desc by article_date
-    blog_list = BlogArticles.objects.filter(visible=True).order_by('-create_date')[:100]
-    # Paginator {
-    page = request.GET.get('page',1)
-    paginator = Paginator(blog_list, 10)
-    try:
-        blog = paginator.page(page)
-    except PageNotAnInteger:
-        blog = paginator.page(1)
-    except EmptyPage:
-        blog = paginator.page(paginator.num_pages)
-    # }
-    # # get random news to display on top of the page
-    # my_ids = News.objects.values_list('id', flat=True)
-    # n = 3
-    # rand_ids = random.sample(list(my_ids), n)
-    # keywords = News.objects.filter(id__in=rand_ids)
-
-    # get most popular news
-    keywords = BlogArticles.objects.filter(create_date__gte=datetime.now()-timedelta(days=7)).order_by(F('vote_up') - F('vote_down'))[::-1][:3]
 
     # lista stirilor votate -- o folosesc ca sa imi dau seama ce este disabled si ce e enabled
     if request.user.is_anonymous:
@@ -38,19 +23,42 @@ def index(request):
         voted_up_list = UserBlogs.objects.filter(vote=1, id_user_id=request.user).values_list('id_blog_id', flat=True)
         voted_down_list = UserBlogs.objects.filter(vote=-1, id_user_id=request.user).values_list('id_blog_id', flat=True)
 
-    # make the search {
+
+    blog = BlogArticles.objects.all()
     if request.GET.get('textbox_search'):
         vector = SearchVector('blog_title') + \
                  SearchVector('blog_description') + \
-                 SearchVector('blog_text') 
-        news = News.objects.annotate(search=vector).filter(
+                 SearchVector('blog_text')
+
+        blog_list = BlogArticles.objects.annotate(search=vector).filter(
             search=SearchQuery(request.GET.get('textbox_search'))).order_by('-create_date', 'blog_title').distinct('create_date', 'blog_title')
+        # Paginator {
+        page = request.GET.get('page',1)
+        paginator = Paginator(blog_list, 10)
+        try:
+            blog = paginator.page(page)
+        except PageNotAnInteger:
+            blog = paginator.page(1)
+        except EmptyPage:
+            blog = paginator.page(paginator.num_pages)
+        # }
+        return render(request, 'blog/blog.html', {'blog': blog})
     else:
-        blog = BlogArticles.objects.all().order_by('-create_date')
-    # }
+        blog_list = BlogArticles.objects.all().order_by('-create_date')[:100]
+    
+        # Paginator {
+        page = request.GET.get('page',1)
+        paginator = Paginator(blog_list, 10)
+        try:
+            blog = paginator.page(page)
+        except PageNotAnInteger:
+            blog = paginator.page(1)
+        except EmptyPage:
+            blog = paginator.page(paginator.num_pages)
+
+
     # render the page
     return render(request, 'blog/blog.html', {'blog': blog,
-                                              'keywords': keywords,
                                               'voted_up_list': voted_up_list,
                                               'voted_down_list': voted_down_list,
                                               'nbar': 'blog'})
