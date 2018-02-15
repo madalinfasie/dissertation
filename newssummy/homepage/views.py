@@ -64,7 +64,7 @@ def index(request):
         # }
         return render(request, 'homepage/home.html', {'news': news, 'top_news': top_news})
     else:
-        news_list = News.objects.all().order_by('-article_date')[:500]
+        news_list = News.objects.all().order_by('-article_date')[:100]
     
         # Paginator {
         page = request.GET.get('page',1)

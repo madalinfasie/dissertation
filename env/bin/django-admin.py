@@ -1,4 +1,4 @@
-#!/home/madalin/Workspace/Python/DjangoProjects/dizertatie/env/bin/python3
+#!/home/madalin/Workspace/dizertatie/env/bin/python3
 from django.core import management
 
 if __name__ == "__main__":

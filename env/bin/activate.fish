@@ -36,7 +36,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/madalin/Workspace/Python/DjangoProjects/dizertatie/env"
+set -gx VIRTUAL_ENV "/home/madalin/Workspace/dizertatie/env"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
