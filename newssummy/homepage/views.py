@@ -85,20 +85,22 @@ def index(request):
                                                   'voted_down_list': voted_down_list,
                                                   'currpage':'home'})
 
+
 # Render the page containing the selected news
 def selected_news_page(request, pk):
     news = News.objects.get(id=pk)
     tags = Tags.objects.filter(newstags__id_news=news.id).values_list('tag_name')
+    source_name = re.compile('//www.(.*?).co').findall(news.article_url)[0]
+    return render(request, 'homepage/news_page.html', {'news': news, 'tags': tags, 'source_name': source_name})
 
-    return render(request, 'homepage/news_page.html', {'news': news, 'tags':tags})
 
 # Render the page with news by tag_name selected
 def news_by_selected_tag(request, tag_name):
     top_news = News.objects.filter(article_date__gte=datetime.now()-timedelta(days=7)).order_by(F('vote_up') - F('vote_down'))[::-1][:3]
-
     tag_id = Tags.objects.get(tag_name=tag_name)
     news = News.objects.filter(newstags__id_tags=tag_id).order_by('-article_date')
     return render(request, 'homepage/home.html', {'news': news, 'top_news': top_news})
+
 
 # VOTING SYSTEM
 def upvote(request, news_id):

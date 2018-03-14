@@ -10,28 +10,19 @@ import calendar
 import pytz
 
 
-# merge cu NewYorkTimes, HuffingtonPost, BBC
-# myurl='http://rss.nytimes.com/services/xml/rss/nyt/World.xml'
-# myurl='http://www.huffingtonpost.com/feeds/verticals/world/news.xml'
-# myurl='http://feeds.bbci.co.uk/news/world/rss.xml'
-
-
 def parse_rss(myurl):
     d = feedparser.parse(myurl)
     news_link, news_title, news_date, news_description = '', '', '', ''
     news_list, news_links = [], []
 
     max_db_date = News.objects.all().aggregate(Max('article_date'))['article_date__max']
-    n = News.objects.all()
-    title_list = []
-    for t in n:
-        title_list.append(t.article_title)
 
     if max_db_date is not None:
         max_news_db_date = max_db_date
     else:
         max_news_db_date = datetime.now(pytz.utc) - timedelta(days=100)
 
+    print(d)
     for news in d.entries:
         news_link = news.link
         news_title = news.title
@@ -51,18 +42,27 @@ def parse_rss(myurl):
             news_img = news['media_thumbnail'][0]['url']
 
         if news_img != '' and news_description != '' and news_title != '' and news_date != '' \
-                and news_date > max_news_db_date and news_title not in title_list:
+                and news_date > max_news_db_date:
+                # and news_title not in title_list
             news_list.append((news_title, news_description, news_date, news_link, news_img))
 
     news_list = list(set(news_list))
     news_links = [news_list[i][3] for i in range(len(news_list))]
 
     for url in news_links:
+        site_name = re.compile('//www.(.*?).co').findall(url)[0]
         news_url = urllib.request.build_opener(urllib.request.HTTPCookieProcessor).open(
             Request(url, headers={'User-Agent': 'Mozilla/5.0'})).read()
         soup = bs.BeautifulSoup(news_url, 'lxml')
         text = ''
-        all_p = soup.find_all('p')
+
+        main_div = []
+        if site_name == 'bbc':
+            main_div = soup.find_all('div', {'class':'story-body__inner'})
+        elif site_name =='nytimes':
+            main_div = soup.find_all('div', {'class':'story-body-supplemental'})
+
+        all_p = [div.find_all('p') for div in main_div]
 
         footer_p = ''
         try:
@@ -89,17 +89,14 @@ def parse_rss(myurl):
 
         use_p = [item for sublist in useless_p for item in sublist]
 
-        for p in all_p:
-            if p not in use_p:
-                text += p.text + '\n'
-
+        for ps in all_p:
+            for p in ps:
+                if p not in use_p:
+                    text += p.text + '\n'
+            
         # fac append textelor stirilor corespunzatoare url-ului.
         for i in range(len(news_list)):
             if url == news_list[i][3]:
                 news_list[i] = news_list[i] + (text,)
 
     return news_list
-
-
-# x = parse_rss('http://feeds.bbci.co.uk/news/world/rss.xml')
-# print(x[0][4])

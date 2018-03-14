@@ -74,11 +74,9 @@ def make_summary(news_sites, language, sentence_count):
                         tagnews_db = NewsTags(id_tags=Tags.objects.get(tag_name=tag_pair[0]), id_news=news_db)
                         tagnews_db.save()
 
+    for row in News.objects.all():
+        if News.objects.filter(article_title=row.article_title).count() > 1:
+            row.delete()
 
-    try:
-        proc = ProcedureDuplicates()
-        proc.solve_duplicates()
-    except:
-        pass
     news = News.objects.all()
     return news
