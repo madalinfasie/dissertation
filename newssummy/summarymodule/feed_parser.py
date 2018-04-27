@@ -22,7 +22,6 @@ def parse_rss(myurl):
     else:
         max_news_db_date = datetime.now(pytz.utc) - timedelta(days=100)
 
-    print(d)
     for news in d.entries:
         news_link = news.link
         news_title = news.title
