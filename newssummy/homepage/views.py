@@ -119,13 +119,13 @@ def upvote(request, news_id):
             # daca userul nu a votat stirea respectiva niciodata, se creaza inregistrare noua in UserNews
             usernews_add = UserNews(id_user=user, id_news=news, vote=1)
             usernews_add.save()
-            usernews_add.save()
             return HttpResponseRedirect('/')
         if usernews.vote == -1:
             # daca userul a mai adaugat in trecut un vot, dar s-a razgandit si il schimba, atunci il anulez si incrementez
             # votul opus
             # IN VARIANTA ASTA USERUL NU ARE POSIBILITATEA DE A ANULA DEFINITIV VOTUL
-            news.vote_down += 1
+            if news.vote_down > 0:
+                news.vote_down -= 1
             news.vote_up += 1
             news.save()
             # schimb data la care s-a inregistrat votul ultima data
@@ -150,15 +150,16 @@ def downvote(request, news_id):
             usernews = None
 
         if usernews is None:
-            news.vote_down -= 1
+            news.vote_down += 1
             news.save()
             usernews_add = UserNews(id_user = user, id_news = news, vote = -1)
             usernews_add.save()
             return HttpResponseRedirect('/')
 
         if usernews.vote == 1:
-            news.vote_up -= 1
-            news.vote_down -= 1
+            if news.vote_up > 0:
+                news.vote_up -= 1
+            news.vote_down += 1
             news.save()
             usernews.last_date = datetime.now()
             usernews.vote = -1

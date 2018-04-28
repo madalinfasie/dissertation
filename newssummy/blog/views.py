@@ -163,7 +163,8 @@ def blogupvote(request, blog_id):
         # daca userul a mai adaugat in trecut un vot, dar s-a razgandit si il schimba, atunci il anulez si incrementez
         # votul opus
         # IN VARIANTA ASTA USERUL NU ARE POSIBILITATEA DE A ANULA DEFINITIV VOTUL
-        blog.vote_down += 1
+        if blog.vote_down > 0:
+            blog.vote_down -= 1
         blog.vote_up += 1
         blog.save()
         # schimb data la care s-a inregistrat votul ultima data
@@ -186,15 +187,16 @@ def blogdownvote(request, blog_id):
         userblogs = None
 
     if userblogs is None:
-        blog.vote_down -= 1
+        blog.vote_down += 1
         blog.save()
         userblogs_add = UserBlogs(id_user = user, id_blog = blog, vote = -1)
         userblogs_add.save()
         return HttpResponseRedirect('/blog/')
 
     if userblogs.vote == 1:
-        blog.vote_up -= 1
-        blog.vote_down -= 1
+        if blog.vote_up > 0:
+            blog.vote_up -= 1
+        blog.vote_down += 1
         blog.save()
         userblogs.last_date = datetime.now()
         userblogs.vote = -1
