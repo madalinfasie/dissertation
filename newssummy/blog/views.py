@@ -6,10 +6,10 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.contrib.postgres.search import SearchVector
 from django.contrib.postgres.search import SearchQuery
+from django.contrib.auth.decorators import login_required
 
 from .models import BlogArticles, UserBlogs
 from .forms import AddBlogForm
-
 
 
 def index(request):
@@ -64,7 +64,7 @@ def index(request):
                                               'nbar': 'blog'})
 
 
-
+@login_required
 def add_blog(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -85,6 +85,7 @@ def add_blog(request):
     return render(request, 'blog/add_blog.html', {'add_form': add_form, 'nbar': 'blog'})
 
 
+@login_required
 def edit_blog(request, id=None):
     blog = get_object_or_404(BlogArticles, id=id)
     # create a form instance and populate it with data from the request:
@@ -103,6 +104,7 @@ def edit_blog(request, id=None):
                                                   "blog_image": blog.blog_image, 'nbar': 'blog'})
 
 
+@login_required
 def delete_blog(request, id=None):
     blog = get_object_or_404(BlogArticles, id=id)
     blog.visible = False
@@ -110,6 +112,7 @@ def delete_blog(request, id=None):
     return HttpResponseRedirect('/blog/user/posts/')
 
 
+@login_required
 def user_blogs(request):
     # get user's blogs ordered desc by create_date
     blog_list = BlogArticles.objects.filter(visible=True ,author=request.user).order_by('-create_date')[:100]
@@ -139,6 +142,7 @@ def user_blogs(request):
     return render(request, 'blog/user_blogs.html',{'blog': blog, 'nbar': 'blog'})
 
 
+@login_required
 def blogupvote(request, blog_id):
     user = request.user
     blog = BlogArticles.objects.get(pk=blog_id)
@@ -172,6 +176,7 @@ def blogupvote(request, blog_id):
 
 
 # ANALOG CA MAI SUS
+@login_required
 def blogdownvote(request, blog_id):
     user = request.user
     blog = BlogArticles.objects.get(pk=blog_id)

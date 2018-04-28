@@ -7,8 +7,8 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
 from django.views.generic import DetailView
-from django.contrib.postgres.search import SearchVector
-from django.contrib.postgres.search import SearchQuery
+from django.contrib.postgres.search import SearchVector,SearchQuery
+from django.contrib.auth.decorators import login_required
 
 from summarymodule import tasks
 from summarymodule.models import News, UserNews, Tags, NewsTags
@@ -103,6 +103,7 @@ def news_by_selected_tag(request, tag_name):
 
 
 # VOTING SYSTEM
+@login_required
 def upvote(request, news_id):
     if request.method == "GET":
         user = request.user
@@ -138,6 +139,7 @@ def upvote(request, news_id):
 
 
 # ANALOG CA MAI SUS
+@login_required
 def downvote(request, news_id):
     if request.method == "GET":
         user = request.user
