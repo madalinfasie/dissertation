@@ -17,16 +17,13 @@ from summarymodule import get_summary
 
 language = "english"
 sentence_count = 3
-news_sites = [#'http://rss.nytimes.com/services/xml/rss/nyt/World.xml',
+news_sites = ['http://rss.nytimes.com/services/xml/rss/nyt/World.xml',
               'http://www.huffingtonpost.com/feeds/verticals/world/news.xml',
               'http://feeds.bbci.co.uk/news/world/rss.xml',]
 
 
 # MAIN FUNCTION TO RENDER HOMEPAGE
 def index(request):
-    # get all news ordered desc by article_date
-    #get_summary.make_summary(news_sites, language, sentence_count)
-    
     # get most popular news
     top_news = News.objects.filter(article_date__gte=datetime.now()-timedelta(days=7))\
         .order_by((F('vote_up') - F('vote_down') + 1/2 * (F('vote_up') + F('vote_down'))))[::-1][:3]
@@ -90,7 +87,7 @@ def index(request):
 def selected_news_page(request, pk):
     news = News.objects.get(id=pk)
     tags = Tags.objects.filter(newstags__id_news=news.id).values_list('tag_name')
-    source_name = re.compile('//www.(.*?).co').findall(news.article_url)[0]
+    source_name = re.compile('//www.(.*?).co').findall(news.article_url)[0].upper()
     return render(request, 'homepage/news_page.html', {'news': news, 'tags': tags, 'source_name': source_name})
 
 
