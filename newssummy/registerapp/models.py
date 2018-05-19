@@ -13,7 +13,7 @@ class UserProfile(models.Model):
 
 
 class UserPassChange(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     pass_key = models.CharField(max_length=40)
     key_expires = models.DateTimeField()
 
