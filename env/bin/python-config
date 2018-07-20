@@ -1,4 +1,4 @@
-#!/home/madalin/Workspace/dizertatie/env/bin/python
+#!/home/madalin/Workspace/Django/dizertatie/env/bin/python
 
 import sys
 import getopt

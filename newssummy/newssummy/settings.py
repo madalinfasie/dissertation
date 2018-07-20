@@ -91,7 +91,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'newssummy',
-        'USER': 'postgres',
+        'USER': 'madalin',
         'PASSWORD': 'SecurePassword12',
         'HOST': 'localhost',
         'PORT': '',
