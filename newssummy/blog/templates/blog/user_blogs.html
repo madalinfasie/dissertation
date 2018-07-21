@@ -11,7 +11,9 @@
                 <h1 class="page-top"><b>My Blogs</b></h1>
             </div>
             <div class="col-sm-5 pull-right">
-                    <a title="Post a news!" role="button" id="a_add_b" class="btn pull-right glyphicon glyphicon-plus" href="/blog/post/" style="display:block;text-decoration:none;decoration:none;color:#004d63;font-size:25px"></a>
+                    <a title="Post a news!" role="button" id="a_add_b" class="btn pull-right" href="/blog/post/" >
+                      <span title="You have to log in first" class="pull-right glyphicon glyphicon-plus span-add-blog"></span>
+                    </a>
             </div>
     </div>
 </div>
@@ -50,10 +52,10 @@
             <div class="col-sm-1">
                 <center>
                     <div class="row">
-                        <a title="Edit article" role="button" id="a_edit_post" class="vote-up-down btn glyphicon glyphicon-edit" href="/blog/user/edit/{{ n.id }}" style="color:#004d63;display:block;text-decoration:none;decoration:none;"></a>
+                        <a title="Edit article" role="button" id="a_edit_post" class="vote-up-down btn glyphicon glyphicon-edit" href="/blog/user/edit/{{ n.id }}"></a>
                     </div>
                     <div class="row">
-                        <a title="Delete article" role="button" id="a_delete_post" class="vote-up-down confirm-delete btn glyphicon glyphicon-remove" href="/blog/user/delete/{{ n.id }}" style="color:#004d63;display:block;text-decoration:none;decoration:none;"></a>
+                        <a title="Delete article" role="button" id="a_delete_post" class="vote-up-down confirm-delete btn glyphicon glyphicon-remove" href="/blog/user/delete/{{ n.id }}"></a>
                     </div>
                 </center>
             </div>

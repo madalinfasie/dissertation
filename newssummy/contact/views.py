@@ -28,4 +28,4 @@ def contact(request):
     else:
         send_form = SentUsMailForm()
 
-    return render(request, 'contact/contact.html', {'send_form': send_form})
+    return render(request, 'contact/contact.html', {'send_form': send_form, 'nbar': 'contact'})

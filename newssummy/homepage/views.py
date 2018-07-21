@@ -7,28 +7,26 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
 from django.views.generic import DetailView
-from django.contrib.postgres.search import SearchVector
-from django.contrib.postgres.search import SearchQuery
+from django.contrib.postgres.search import SearchVector,SearchQuery
+from django.contrib.auth.decorators import login_required
 
 from summarymodule import tasks
-from summarymodule.models import News, UserNews
+from summarymodule.models import News, UserNews, Tags, NewsTags
 from summarymodule import get_summary
-from statisticsapp.models import Tags, NewsTags
+
 
 language = "english"
 sentence_count = 3
-news_sites = [#'http://rss.nytimes.com/services/xml/rss/nyt/World.xml',
+news_sites = ['http://rss.nytimes.com/services/xml/rss/nyt/World.xml',
               'http://www.huffingtonpost.com/feeds/verticals/world/news.xml',
               'http://feeds.bbci.co.uk/news/world/rss.xml',]
 
 
 # MAIN FUNCTION TO RENDER HOMEPAGE
 def index(request):
-    # get all news ordered desc by article_date
-    #get_summary.make_summary(news_sites, language, sentence_count)
-    
     # get most popular news
-    top_news = News.objects.filter(article_date__gte=datetime.now()-timedelta(days=7)).order_by(F('vote_up') - F('vote_down'))[::-1][:3]
+    top_news = News.objects.filter(article_date__gte=datetime.now()-timedelta(days=7))\
+        .order_by((F('vote_up') - F('vote_down') + 1/2 * (F('vote_up') + F('vote_down'))))[::-1][:3]
 
     # lista stirilor votate -- o folosesc ca sa imi dau seama ce este disabled si ce e enabled
     if request.user.is_anonymous:
@@ -63,7 +61,7 @@ def index(request):
         # }
         return render(request, 'homepage/home.html', {'news': news, 'top_news': top_news})
     else:
-        news_list = News.objects.all().order_by('-article_date')[:500]
+        news_list = News.objects.all().order_by('-article_date')[:100]
     
         # Paginator {
         page = request.GET.get('page',1)
@@ -84,24 +82,27 @@ def index(request):
                                                   'voted_down_list': voted_down_list,
                                                   'currpage':'home'})
 
+
 # Render the page containing the selected news
 def selected_news_page(request, pk):
     news = News.objects.get(id=pk)
     tags = Tags.objects.filter(newstags__id_news=news.id).values_list('tag_name')
+    source_name = re.compile('//www.(.*?).co').findall(news.article_url)[0].upper()
+    return render(request, 'homepage/news_page.html', {'news': news, 'tags': tags, 'source_name': source_name})
 
-    return render(request, 'homepage/news_page.html', {'news': news, 'tags':tags})
 
 # Render the page with news by tag_name selected
 def news_by_selected_tag(request, tag_name):
     top_news = News.objects.filter(article_date__gte=datetime.now()-timedelta(days=7)).order_by(F('vote_up') - F('vote_down'))[::-1][:3]
-
     tag_id = Tags.objects.get(tag_name=tag_name)
     news = News.objects.filter(newstags__id_tags=tag_id).order_by('-article_date')
     return render(request, 'homepage/home.html', {'news': news, 'top_news': top_news})
 
+
 # VOTING SYSTEM
+@login_required
 def upvote(request, news_id):
-    if request.is_ajax():
+    if request.method == "GET":
         user = request.user
         news = News.objects.get(pk=news_id)
         try:
@@ -115,26 +116,27 @@ def upvote(request, news_id):
             # daca userul nu a votat stirea respectiva niciodata, se creaza inregistrare noua in UserNews
             usernews_add = UserNews(id_user=user, id_news=news, vote=1)
             usernews_add.save()
-            usernews_add.save()
-            return render(request, 'homepage/voting_ajax.html',{'news_id':news_id})
+            return HttpResponseRedirect('/')
         if usernews.vote == -1:
             # daca userul a mai adaugat in trecut un vot, dar s-a razgandit si il schimba, atunci il anulez si incrementez
             # votul opus
             # IN VARIANTA ASTA USERUL NU ARE POSIBILITATEA DE A ANULA DEFINITIV VOTUL
-            news.vote_down += 1
+            if news.vote_down > 0:
+                news.vote_down -= 1
             news.vote_up += 1
             news.save()
             # schimb data la care s-a inregistrat votul ultima data
             usernews.last_date = datetime.now()
             usernews.vote = 1
             usernews.save()
-            return render(request, 'homepage/voting_ajax.html',{'news_id':news_id})
+            return HttpResponseRedirect('/')
     else:
         news_id = 0
     return None
 
 
 # ANALOG CA MAI SUS
+@login_required
 def downvote(request, news_id):
     if request.method == "GET":
         user = request.user
@@ -145,20 +147,21 @@ def downvote(request, news_id):
             usernews = None
 
         if usernews is None:
-            news.vote_down -= 1
+            news.vote_down += 1
             news.save()
             usernews_add = UserNews(id_user = user, id_news = news, vote = -1)
             usernews_add.save()
-            return HttpResponse(news_id)
+            return HttpResponseRedirect('/')
 
         if usernews.vote == 1:
-            news.vote_up -= 1
-            news.vote_down -= 1
+            if news.vote_up > 0:
+                news.vote_up -= 1
+            news.vote_down += 1
             news.save()
             usernews.last_date = datetime.now()
             usernews.vote = -1
             usernews.save()
-            return HttpResponse(news_id)
+            return HttpResponseRedirect('/')
     else:
         news_id = 0
     return None

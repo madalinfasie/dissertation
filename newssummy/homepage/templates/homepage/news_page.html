@@ -27,7 +27,7 @@
         <div class="col-sm-6">
             <div class="row">
                 <h4 class="pull-left article-footer">
-                    Check the entire news <a href="{{news.article_url}}" target="_blank">here</a> or share it on
+                    Check the entire news on <a href="{{news.article_url}}" target="_blank">{{source_name}}</a> or share it on
                     <a title="Share this article" href="http://www.facebook.com/sharer/sharer.php?u=http://127.0.0.1:8000/shared/{{ news.id }}" target="_blank" style="padding:0 5px 0 0;">
                         <img class="pull-right img-responsive share-img-size"  src="{% static 'img/Fshare.png' %}"/> Facebook
                     </a>
@@ -37,14 +37,8 @@
         </div>
 
         <div class="col-sm-6">
-                <button type="button" class="pull-right btn btn-info outline" data-dismiss="modal">Close</button>
+                <button type="button" class="pull-right btn btn-warning outline" data-dismiss="modal">Close</button>
         </div>
 
     </div>
-
-
-
-
-
-
 </div>

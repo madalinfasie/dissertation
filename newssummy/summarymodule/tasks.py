@@ -9,8 +9,8 @@ from celery import shared_task,current_task
 lang = "english"
 sent_count = 3
 news_site = [
-    #'http://rss.nytimes.com/services/xml/rss/nyt/World.xml',
-    #'http://www.huffingtonpost.com/feeds/verticals/world/news.xml',
+    'http://rss.nytimes.com/services/xml/rss/nyt/World.xml',
+    'http://www.huffingtonpost.com/feeds/verticals/world/news.xml',
     'http://feeds.bbci.co.uk/news/world/rss.xml'
 ]
 

@@ -46,7 +46,8 @@ To change your password, click this link within 48 hours: \n\n
 http://testblitz.com:8000/users/password/change/%s""" % (user.username,
                                                          new_profile.pass_key)
 
-                send_mail(email_subject, email_body, 'blitznews@zesoft.ro', [user.email])
+                
+                send_mail(email_subject, email_body, 'messager@localhost.com', [user.email])
 
                 return HttpResponseRedirect('/users/login/')
             else:
@@ -96,8 +97,6 @@ def register_user(request):
                     custom_err = "This e-mail it's already in use."
                     return render(request, 'register/register.html',
                                   {'register_form': register_form, 'custom_err': custom_err})
-
-
             else:
                 # create new user
                 user = User.objects.create_user(register_form.cleaned_data['username'],
@@ -137,7 +136,7 @@ def register_user(request):
                 #
                 # send_mail(email_subject, email_body, 'messager@localhost.com', [user.email], fail_silently=False)
 
-                return HttpResponseRedirect('/users/success/')
+                return HttpResponseRedirect('/')
     else:
         register_form = UserForm()
 
@@ -145,7 +144,7 @@ def register_user(request):
 
 
 def success(request):
-    return render(request, 'register/success.html')
+    return HttpResponseRedirect('/')
 
 
 # confirm registration

@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'contact',
     'registerapp',
     'blog',
-    'statisticsapp',
     'usersummaryapp',
     'social_django',
     'django_social_share',
@@ -92,8 +91,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'newssummy',
-        'USER': 'postgres',
-        'PASSWORD': '{Fasie1994#}',
+        'USER': 'madalin',
+        'PASSWORD': 'SecurePassword12',
         'HOST': 'localhost',
         'PORT': '',
     }
@@ -148,9 +147,9 @@ EMAIL_PORT = 1025
 EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
 
 # EMAIL_USE_SSL = True
-# EMAIL_HOST = 'shared1.indicii.ro'
-# EMAIL_HOST_USER = 'blitznews@zesoft.ro'
-# EMAIL_HOST_PASSWORD = '{Fasie1994#}'
+# EMAIL_HOST = 'server_name'
+# EMAIL_HOST_USER = 'email_address'
+# EMAIL_HOST_PASSWORD = 'pasword'
 # EMAIL_PORT = 465
 # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # SERVER_EMAIL = EMAIL_HOST_USER
